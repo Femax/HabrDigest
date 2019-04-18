@@ -1,12 +1,13 @@
 package actor.parse
 
-import akka.actor.{Actor, ActorLogging}
+import actor.save.SaveAction
+import akka.actor.{Actor, ActorLogging, ActorRef}
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.elementList
 import persistent.post.Post
 
-case class ParseActor() extends Actor with ActorLogging {
+class ParseActor(val saveActor: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
     case ParseAction(htmlBody) => {
       println(s"parse receive ${htmlBody.length} messages")
@@ -18,6 +19,7 @@ case class ParseActor() extends Actor with ActorLogging {
         Post(title.mkString, tags, user, body)
       }).filter(it => it.title.length > 0)
       log.info(posts.toString())
+      saveActor ! SaveAction(posts)
     }
   }
 }
