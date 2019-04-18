@@ -1,5 +1,7 @@
 name := "HabrDigest"
 
+enablePlugins(DockerComposePlugin)
+
 version := "0.1"
 
 scalaVersion := "2.12.8"
@@ -31,8 +33,7 @@ lazy val global = project
   .aggregate(
     scrapper,
     http,
-    front,
-    docker
+    front
   )
 
 lazy val scrapper = project
@@ -61,12 +62,6 @@ lazy val front = project
   )
   .dependsOn(
     http
-  )
-
-lazy val docker = project
-    .in(file("./docker"))
-  .settings(
-    name := "docker"
   )
 
 lazy val compilerOptions = Seq(
