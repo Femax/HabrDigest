@@ -31,10 +31,12 @@ lazy val global = project
   .aggregate(
     scrapper,
     http,
-    front
+    front,
+    docker
   )
 
 lazy val scrapper = project
+    .in(file("./scrapper"))
   .settings(
     name := "scrapper",
     libraryDependencies ++= akkaDep
@@ -54,8 +56,26 @@ lazy val http = project
 lazy val front = project
   .settings(
     name := "front-scalajs",
+    scalacOptions ++= compilerOptions,
     libraryDependencies ++= Seq()
   )
   .dependsOn(
     http
   )
+
+lazy val docker = project
+    .in(file("./docker"))
+  .settings(
+    name := "docker"
+  )
+
+lazy val compilerOptions = Seq(
+  "-unchecked",
+  "-feature",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-language:implicitConversions",
+  "-language:postfixOps",
+  "-deprecation",
+  "-encoding",
+  "utf8")
