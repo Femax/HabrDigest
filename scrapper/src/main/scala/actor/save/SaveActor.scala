@@ -6,7 +6,7 @@ import persistent.post.PostService
 class SaveActor(postService: PostService) extends Actor with ActorLogging {
   override def receive: Receive = {
     case SaveAction(list) =>
-      println("123")
-      postService.saveList(list)
+      val data = postService.saveList(list)
+      log.info(s"servcise save data $data")
   }
 }

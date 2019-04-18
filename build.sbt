@@ -6,19 +6,56 @@ scalaVersion := "2.12.8"
 
 scalacOptions += "-Ypartial-unification" // 2.11.9+
 
-libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.5.13",
-  "com.typesafe.akka" %% "akka-stream" % "2.5.13",
-  "com.typesafe.akka" %% "akka-http" % "10.1.3",
-  "net.ruippeixotog" %% "scala-scraper" % "2.1.0",
-  "org.scalactic" %% "scalactic" % "3.0.5",
-  "org.tpolecat" %% "doobie-core" % "0.6.0",
-  // And add any of these as needed
-  "org.tpolecat" %% "doobie-h2" % "0.6.0", // H2 driver 1.4.197 + type mappings.
-  "org.tpolecat" %% "doobie-hikari" % "0.6.0", // HikariCP transactor.
-  "org.tpolecat" %% "doobie-postgres" % "0.6.0", // Postgres driver 42.2.5 + type mappings.
-  "org.tpolecat" %% "doobie-specs2" % "0.6.0" % "test", // Specs2 support for typechecking statements.
-  "org.tpolecat" %% "doobie-scalatest" % "0.6.0" % "test", // ScalaTest support for typechecking statements.
-  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
 
-)
+lazy val dependency = new {
+
+  private val akkaActorV = "2.5.13"
+  private val akkaStreamV = "2.5.13"
+  private val akkaHttpV = "10.1.3"
+  private val scalaScrapperV = "2.1.0"
+  private val couchDbV = "1.0.3.1"
+  private val scalatestV = "3.0.5"
+
+  val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaActorV
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaStreamV
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpV
+  val scalaScrapper = "net.ruippeixotog" %% "scala-scraper" % scalaScrapperV
+  //https://github.com/GuyIncognito1986/couchdb-scala couch db driver for scala 2.12.*
+  val couchDb = "io.github.guyincognito1986" %% "couchdb-scala" % couchDbV
+  val scalatest = "org.scalatest" %% "scalatest" % scalatestV % "test"
+}
+
+lazy val akkaDep = Seq(dependency.akkaActor, dependency.akkaStream, dependency.couchDb, dependency.scalatest)
+lazy val global = project
+  .in(file("."))
+  .aggregate(
+    scrapper,
+    http,
+    front
+  )
+
+lazy val scrapper = project
+  .settings(
+    name := "scrapper",
+    libraryDependencies ++= akkaDep
+      ++ Seq(dependency.akkaHttp, dependency.scalaScrapper)
+  )
+
+lazy val http = project
+  .settings(
+    name := "akka-http",
+
+    libraryDependencies ++= akkaDep ++ Seq(
+      dependency.akkaHttp,
+    )
+  )
+
+
+lazy val front = project
+  .settings(
+    name := "front-scalajs",
+    libraryDependencies ++= Seq()
+  )
+  .dependsOn(
+    http
+  )

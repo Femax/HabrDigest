@@ -13,7 +13,7 @@ class ParseActor(val saveActor: ActorRef) extends Actor with ActorLogging {
       println(s"parse receive ${htmlBody.length} messages")
       val posts = htmlBody.map(ele => {
         val title = ele >> elementList(".post__title") >> text("a")
-        val tags = (ele >> allText(".inline-list__item_hub")).split(" ").toList
+        val tags = ele >> allText(".inline-list__item_hub")
         val user = ele >> allText(".user-info__nickname_small")
         val body = ele >> allText(".post__title")
         Post(title.mkString, tags, user, body)
