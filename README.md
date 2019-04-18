@@ -9,3 +9,6 @@ check is couch db start
 
 ```curl http://127.0.0.1:5984/```
 
+also 
+
+```sbt dockerComposeUp ```
