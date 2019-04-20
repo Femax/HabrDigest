@@ -1,4 +1,6 @@
 # HabrDigest
+
+### CouchDb
 start couch db
 ```
 cd ./docker 
@@ -12,3 +14,13 @@ check is couch db start
 also 
 
 ```sbt dockerComposeUp ```
+
+### ScalaJS
+for run front
+```
+sbt fastOptJS::webpack
+
+sbt fastOptJS
+```
+
+and share static with ```index.html```

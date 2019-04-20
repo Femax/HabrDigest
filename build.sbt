@@ -1,3 +1,5 @@
+
+
 name := "HabrDigest"
 
 enablePlugins(DockerComposePlugin)
@@ -5,8 +7,13 @@ enablePlugins(DockerComposePlugin)
 version := "0.1"
 
 scalaVersion := "2.12.8"
-
 scalacOptions += "-Ypartial-unification" // 2.11.9+
+val scalaJSReactVersion = "1.2.0"
+val scalaCssVersion = "0.5.5"
+val reactJSVersion = "16.3.2"
+
+scalaJSUseMainModuleInitializer := true
+
 
 
 lazy val dependency = new {
@@ -27,7 +34,12 @@ lazy val dependency = new {
   val scalatest = "org.scalatest" %% "scalatest" % scalatestV % "test"
 }
 
+lazy val jsDepenndency = new {
+
+}
+
 lazy val akkaDep = Seq(dependency.akkaActor, dependency.akkaStream, dependency.couchDb, dependency.scalatest)
+
 lazy val global = project
   .in(file("."))
   .aggregate(
@@ -37,7 +49,7 @@ lazy val global = project
   )
 
 lazy val scrapper = project
-    .in(file("./scrapper"))
+  .in(file("./scrapper"))
   .settings(
     name := "scrapper",
     libraryDependencies ++= akkaDep
@@ -47,7 +59,6 @@ lazy val scrapper = project
 lazy val http = project
   .settings(
     name := "akka-http",
-
     libraryDependencies ++= akkaDep ++ Seq(
       dependency.akkaHttp,
     )
@@ -55,10 +66,17 @@ lazy val http = project
 
 
 lazy val front = project
+  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .settings(
     name := "front-scalajs",
     scalacOptions ++= compilerOptions,
-    libraryDependencies ++= Seq()
+    libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.9.2",
+      "com.github.japgolly.scalajs-react" %%% "core" % "1.4.1",
+      "com.github.japgolly.scalajs-react" %%% "extra" % "1.4.1"),
+    scalaJSUseMainModuleInitializer := true,
+    npmDependencies in Compile ++= Seq(
+      "react" -> "16.7.0",
+      "react-dom" -> "16.7.0")
   )
   .dependsOn(
     http
