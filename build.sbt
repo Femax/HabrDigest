@@ -1,4 +1,4 @@
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport.npmDependencies
+
 
 name := "HabrDigest"
 
@@ -71,10 +71,12 @@ lazy val front = project
     name := "front-scalajs",
     scalacOptions ++= compilerOptions,
     libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.9.2",
-      "com.github.japgolly.scalajs-react" %%% "core" % "1.1.1"),
+      "com.github.japgolly.scalajs-react" %%% "core" % "1.4.1",
+      "com.github.japgolly.scalajs-react" %%% "extra" % "1.4.1"),
+    scalaJSUseMainModuleInitializer := true,
     npmDependencies in Compile ++= Seq(
-      "react" -> "15.6.1",
-      "react-dom" -> "15.6.1")
+      "react" -> "16.7.0",
+      "react-dom" -> "16.7.0")
   )
   .dependsOn(
     http
