@@ -20,7 +20,7 @@ object HttpServer extends App {
   val port = 9001
 
 
-  val bindingFuture = Http().bindAndHandle(new PostActor(new PostService).route, host, port)
+  val bindingFuture = Http().bindAndHandle(new PostRoute(new PostService).route, host, port)
 
   println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
   StdIn.readLine() // let it run until user presses return

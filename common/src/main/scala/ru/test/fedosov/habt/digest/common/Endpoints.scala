@@ -11,6 +11,6 @@ object PostEndpoint extends Endpoint("/post"){
   override type dataClass = Post
 }
 
-object Main{
-  PostEndpoint.url
+object Endpoints{
+    val postEndpoint = PostEndpoint
 }
