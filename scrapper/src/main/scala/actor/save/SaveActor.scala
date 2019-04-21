@@ -1,7 +1,7 @@
 package actor.save
 
 import akka.actor.{Actor, ActorLogging}
-import persistent.post.PostService
+import ru.test.fedosov.habt.digest.common.Post.{ PostService}
 
 class SaveActor(postService: PostService) extends Actor with ActorLogging {
   override def receive: Receive = {

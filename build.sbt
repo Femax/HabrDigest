@@ -18,12 +18,13 @@ scalaJSUseMainModuleInitializer := true
 
 lazy val dependency = new {
 
-  private val akkaActorV = "2.5.13"
-  private val akkaStreamV = "2.5.13"
+  private val akkaActorV = "2.5.19"
+  private val akkaStreamV = "2.5.19"
   private val akkaHttpV = "10.1.3"
   private val scalaScrapperV = "2.1.0"
   private val couchDbV = "1.0.3.1"
   private val scalatestV = "3.0.5"
+  private val sprayJsonV = "10.1.8"
 
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaActorV
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaStreamV
@@ -31,6 +32,8 @@ lazy val dependency = new {
   val scalaScrapper = "net.ruippeixotog" %% "scala-scraper" % scalaScrapperV
   //https://github.com/GuyIncognito1986/couchdb-scala couch db driver for scala 2.12.*
   val couchDb = "io.github.guyincognito1986" %% "couchdb-scala" % couchDbV
+  val akkaSprayJson = "com.typesafe.akka" %% "akka-http-spray-json" % sprayJsonV
+
   val scalatest = "org.scalatest" %% "scalatest" % scalatestV % "test"
 }
 
@@ -48,21 +51,34 @@ lazy val global = project
     front
   )
 
+lazy val common = project
+  .in(file("./common"))
+  .settings(
+    name := "common",
+    libraryDependencies ++= Seq(dependency.couchDb)
+  )
+
 lazy val scrapper = project
   .in(file("./scrapper"))
   .settings(
     name := "scrapper",
     libraryDependencies ++= akkaDep
       ++ Seq(dependency.akkaHttp, dependency.scalaScrapper)
-  )
+  ).dependsOn(
+  common
+)
 
 lazy val http = project
+  .in(file("./http"))
   .settings(
-    name := "akka-http",
+    name := "http",
     libraryDependencies ++= akkaDep ++ Seq(
       dependency.akkaHttp,
+      dependency.akkaSprayJson
     )
-  )
+  ).dependsOn(
+  common
+)
 
 
 lazy val front = project
@@ -79,7 +95,7 @@ lazy val front = project
       "react-dom" -> "16.7.0")
   )
   .dependsOn(
-    http
+    common
   )
 
 lazy val compilerOptions = Seq(

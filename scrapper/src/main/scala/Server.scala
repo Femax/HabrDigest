@@ -4,7 +4,7 @@ import actor.save.SaveActor
 import akka.actor.{ActorSystem, Props}
 import akka.stream.ActorMaterializer
 import com.ibm.couchdb.{CouchDb, CouchView}
-import persistent.post.PostService
+import ru.test.fedosov.habt.digest.common.Post.PostService
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
@@ -19,7 +19,6 @@ object Server extends App {
 
   val host = "0.0.0.0"
   val port = 9000
-
   val saveActor = system.actorOf(Props(new SaveActor(new PostService())))
   val parseActor = system.actorOf(Props(new ParseActor(saveActor)))
   val pullActor = system.actorOf(Props(new PostRequest(parseActor)), name = "pull")
