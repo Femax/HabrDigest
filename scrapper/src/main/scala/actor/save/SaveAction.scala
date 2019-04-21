@@ -1,5 +1,6 @@
 package actor.save
 
-import persistent.post.Post
+import ru.test.fedosov.habt.digest.common.Post.Post
+
 
 case class SaveAction(list: List[Post])

@@ -19,7 +19,7 @@ class PostRequest(val parseActor: ActorRef) extends Actor with ActorLogging {
 
   val http = Http(context.system)
 
-  //TODO  pipe pattern for attach context to Actor?
+  //TODO  provide response of future in actor
   override def preStart(): Unit = {
     http.singleRequest(
       HttpRequest(uri = "https://habr.com/ru/top/")

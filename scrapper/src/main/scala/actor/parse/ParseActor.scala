@@ -5,7 +5,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef}
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.elementList
-import persistent.post.Post
+import ru.test.fedosov.habt.digest.common.Post.Post
 
 class ParseActor(val saveActor: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
