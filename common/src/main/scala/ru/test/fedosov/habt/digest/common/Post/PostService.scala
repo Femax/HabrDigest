@@ -8,10 +8,9 @@ class PostService(implicit val couch: CouchDb) {
   val dbName = "couchdb-scala-basic-example"
   val db = couch.db(dbName, typeMapping)
   val client = couch.client
-  val documents = new Documents(client, dbName, typeMapping)
-  {
-    //        couch.dbs.create(dbName).unsafeRun()
-    //    db.design.create(designPost).unsafeRun()
+  val documents = new Documents(client, dbName, typeMapping) {
+    if (!couch.dbs.getAll.unsafeRun().contains(dbName))
+      couch.dbs.create(dbName).unsafeRun()
     println("created")
   }
 

@@ -4,24 +4,24 @@ import actor.parse.ParseAction
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes}
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings}
+import akka.stream.Materializer
 import akka.util.ByteString
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 
-class PostRequest(val parseActor: ActorRef) extends Actor with ActorLogging {
+import scala.concurrent.ExecutionContext
+
+class PostActor(val parseActor: ActorRef,
+                implicit val executionContext: ExecutionContext,
+                implicit val materializer: Materializer) extends Actor with ActorLogging {
 
   import akka.pattern.pipe
-  import context.dispatcher
 
-  final implicit val materializer: ActorMaterializer = ActorMaterializer(ActorMaterializerSettings(context.system))
 
-  val http = Http(context.system)
-
-  //TODO  provide response of future in actor
+  //  TODO  provide response of future in actor
   override def preStart(): Unit = {
-    http.singleRequest(
+    Http(context.system).singleRequest(
       HttpRequest(uri = "https://habr.com/ru/top/")
     ).pipeTo(self)
   }
