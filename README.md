@@ -24,3 +24,12 @@ sbt fastOptJS
 ```
 
 and share static with ```index.html```
+
+### CheckList
+- Парсит сообщения с habr +
+- Отдает по akka-http +
+- Собирается bundle react +
+- Обернуть sharding db в рест -
+- Сделать репитбл PostActor -
+- Сделать старт из одного dockerFile -
+
